@@ -70,8 +70,8 @@ Test.prototype =
 , fail: function fail(e) {
     if (this.completed) return this.error(new Error(ERR_COMPLETED_ASSERT))
     this.fails.push(e)
-	if(this.mute) this.log.error(this.name);
- 	this.log.fail(e)
+	if(this.mute) this.log.print(this.name);
+ 	this.log.fail(e);
   }
 , error: function error(e) {
     this.errors.push(e)
@@ -93,6 +93,10 @@ Test.prototype =
       if (failFast) this.pass()
       if (sync) this.complete()
     } catch(e) {
+      if(this.mute) {
+        this.log.print(this.name);
+        this.log.error(e);
+      }
       if (ERR_EXPECT == e.name) assert.fail(e)
       else assert.error(e)
       this.complete()
@@ -233,7 +237,7 @@ function run(units, callback) {
     }
   ).run(function(suite) {
     if (callback) return callback(suite)
-    if (suite.mute) return
+    // if (suite.mute) return
     log.print
     ( 'Passed:' + suite.passes.length
     + ' Failed:' + suite.fails.length
