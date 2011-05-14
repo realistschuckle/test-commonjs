@@ -70,7 +70,8 @@ Test.prototype =
 , fail: function fail(e) {
     if (this.completed) return this.error(new Error(ERR_COMPLETED_ASSERT))
     this.fails.push(e)
-    if (!this.mute) this.log.fail(e)
+	if(this.mute) this.log.error(this.name);
+ 	this.log.fail(e)
   }
 , error: function error(e) {
     this.errors.push(e)
@@ -127,7 +128,7 @@ function Suite(options) {
     , units: unit
     , unit: unit
     , Assert: unitMap.Assert || Assert
-    , log: log.section()
+    , log: (options.mute)? log : log.section()
     }))
   }
 
